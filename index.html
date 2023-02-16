@@ -68,6 +68,38 @@
     display: none;
   }
 
+  .message-input-wrapper {
+    margin-top: 10px;
+    font-size: 0;
+  }
+
+  .message-input-wrapper input {
+    appearance: none;
+    border-radius: 6px 0 0 6px;
+    border: none;
+    box-shadow: none;
+    font-size: 14px;
+    line-height: 16px;
+    outline: none;
+    padding: 6px 12px;
+  }
+  .message-input-wrapper input:focus {
+    outline: none;
+  }
+
+  .message-input-wrapper button {
+    appearance: none;
+    background: #20232A;
+    border-radius: 0 6px 6px 0;
+    border: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 6px 12px;
+  }
+
 </style>
 
 <body>
@@ -79,6 +111,10 @@
       <h1 id="not-in-webview-message">It's NOT inside a WebView.</h1>
       <div id="post-message-wrapper">
         <h1>It's inside a WebView.</h1>
+        <div class="message-input-wrapper">
+          <input id="message-input" placeholder="event|foo=bar&bar=foo"/>
+          <button id="submit-btn">Post</button>
+        </div>
       </div>
     </div>
   </div>
@@ -96,6 +132,26 @@
       const postMessageWrapper = document.querySelector('#post-message-wrapper');
       logoImg.classList.add('rotate');
       postMessageWrapper.style.display = 'block';
+
+      const submitBtn = document.querySelector('#submit-btn');
+      const messageInput = document.querySelector('#message-input');
+      const submit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const message = (messageInput.value || '').trim();
+        if (!message) {
+          return;
+        }
+        postMessage(message);
+      };
+      submitBtn.addEventListener('click', submit);
+      messageInput.addEventListener('blur', submit);
+      messageInput.addEventListener('keypress', (event) => {
+        if (event.key !== 'Enter') {
+          return;
+        }
+        submit(event);
+      });
     });
   </script>
 </body>
