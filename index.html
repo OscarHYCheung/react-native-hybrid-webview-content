@@ -143,6 +143,7 @@
           return;
         }
         postMessage(message);
+        messageInput.value = '';
       };
       submitBtn.addEventListener('click', submit);
       messageInput.addEventListener('blur', submit);
