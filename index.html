@@ -49,11 +49,16 @@
     animation: spin 4s linear infinite;
   }
 
+  .container .content-wrapper h1,
+  .container .content-wrapper p,
+  .container .content-wrapper a {
+    font-weight: 400;
+    color: #FFFFFF;
+  }
+
   .container .content-wrapper h1 {
     text-align: center;
     font-size: 24px;
-    font-weight: 400;
-    color: #FFFFFF;
     margin: 30px 0 0;
   }
 
@@ -68,9 +73,41 @@
     display: none;
   }
 
+  .post-message-links {
+    margin: 20px 0 30px;
+    text-align: left;
+    color: white;
+    list-style: none;
+    padding-left: 35px;
+  }
+
+  .post-message-links li+li {
+    margin-top: 8px;
+  }
+
+  .post-message-links li {
+    position: relative;
+  }
+
+  .post-message-links li::before {
+    content: "-";
+    font-size: 80%;
+    position: absolute;
+    left: -15px;
+    transform: translateX(-50%);
+  }
+
+  .post-message-links li a {
+    font-size: 16px;
+    line-height: 22px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
   .message-input-wrapper {
     margin-top: 10px;
     font-size: 0;
+    display: flex;
   }
 
   .message-input-wrapper input {
@@ -83,7 +120,9 @@
     margin: 0;
     outline: none;
     padding: 6px 12px;
+    flex: 1;
   }
+
   .message-input-wrapper input:focus {
     outline: none;
   }
@@ -112,9 +151,26 @@
         alt="React Logo" />
       <h1 id="not-in-webview-message">It's NOT inside a WebView.</h1>
       <div id="post-message-wrapper">
-        <h1>It's inside a WebView.</h1>
+        <h1>Click to post a message to<br />React Native:</h1>
+
+        <ul class="post-message-links">
+          <li>
+            <a class="post-message-link"
+              data-value="{&quot;action&quot;:&quot;open-url&quot;,&quot;params&quot;:{&quot;url&quot;:&quot;https://reactnative.dev/&quot;}}">Open reactnative.dev</a>
+          </li>
+          <li>
+            <a class="post-message-link" data-value="{&quot;action&quot;:&quot;go-back&quot;}">Go back to home</a>
+          </li>
+          <li>
+            <a class="post-message-link"
+              data-value="{&quot;action&quot;:&quot;log-to-native&quot;,&quot;params&quot;:{&quot;message&quot;:&quot;Hello from WebView content!&quot;}}">Send a log message to the native app</a>
+          </li>
+          <li><a class="post-message-link" data-value="{&quot;action&quot;:&quot;rand-sync&quot;}">Get a rand float number from the native app (async)</a></li>
+          <li><a class="post-message-link" data-value="{&quot;action&quot;:&quot;rand-async&quot;}">Get a rand float number from the native app (sync)</a></li>
+        </ul>
+
         <div class="message-input-wrapper">
-          <input id="message-input" placeholder="event|foo=bar&bar=foo"/>
+          <input id="message-input" placeholder="{ action: &quot;action-name&quot;, params: { ... } }" />
           <button id="submit-btn">Post</button>
         </div>
       </div>
@@ -153,6 +209,19 @@
           return;
         }
         submit(event);
+      });
+
+      const handlePostMessageLinkClicked = (event) => {
+        const value = event?.target?.dataset?.value;
+        if (!value) {
+          return;
+        }
+
+        messageInput.value = value;
+      };
+      const postMessageLinks = document.querySelectorAll('.post-message-link');
+      postMessageLinks.forEach((link) => {
+        link.addEventListener('click', handlePostMessageLinkClicked);
       });
     });
   </script>
